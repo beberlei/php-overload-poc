@@ -19,7 +19,29 @@ var_dump($reflectionFunction);
 var_dump($reflectionFunction->invokeArgs([5, 6]));
 var_dump($reflectionFunction->getNumberOfParameters());
 var_dump($reflectionFunction->getNumberOfRequiredParameters());
-var_dump($reflectionFunction->getParameters());
+var_dump($params = $reflectionFunction->getParameters());
+
+$reflectionFunction = new ReflectionFunction('qux_original');
+$original = $reflectionFunction->getParameters();
+
+for ($i = 0; $i < count($params); $i++) {
+    if ($params[$i]->allowsNull() !== $original[$i]->allowsNull()) {
+        echo $params[$i]->getName() . " allowsNull missmatch.\n";
+    }
+
+    if ($params[$i]->canBePassedByValue() !== $original[$i]->canBePassedByValue()) {
+        echo $params[$i]->getName() . " canBePassedByValue missmatch.\n";
+    }
+
+    if ($params[$i]->getDefaultValue() !== $original[$i]->getDefaultValue()) {
+        echo $params[$i]->getName() . " getDefaultValue() missmatch.\n";
+    }
+
+    if ($params[$i]->isOptional() !== $original[$i]->isOptional()) {
+        echo $params[$i]->getName() . " isOptional() missmatch.\n";
+    }
+}
+
 --EXPECTF--
 int(3)
 int(12)
