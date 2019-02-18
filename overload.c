@@ -83,7 +83,7 @@ static zend_always_inline void php_overload_arginfo(zend_function *overload, zen
 				ZSTR_LEN(ZEND_TYPE_NAME(info[it].type)), 1);
 
                         copy[it].type = ZEND_TYPE_ENCODE_CLASS(
-				interned, ZEND_TYPE_ALLOW_NULL(copy[it].type));
+				interned, ZEND_TYPE_ALLOW_NULL(info[it].type));
 		}
 #elif
 		copy[it].type_hint         = info[it].type_hint;
