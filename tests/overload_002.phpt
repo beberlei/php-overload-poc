@@ -2,15 +2,18 @@
 overload: Backtrace
 --FILE--
 <?php
-
-require "qux_backtrace.php";
+require "qux_backtrace.inc";
 
 var_dump(qux(6, 5));
---EXPECTF--
-array(2) {
+?>
+--EXPECT--
+array(1) {
   [0]=>
-  string(3) "qux"
-  [1]=>
-  string(3) "qux"
+  array(2) {
+    ["file"]=>
+    string(3) "qux"
+    ["line"]=>
+    int(3)
+  }
 }
 int(-1)

@@ -285,9 +285,42 @@ PHP_FUNCTION(php_overload_prototype)
     object->ptr = parent->internal_function.reserved[php_overload_resource_id];    
 }
 
+PHP_FUNCTION(php_overload_backtrace)
+{
+	zend_execute_data *frame = execute_data;
+
+	array_init(return_value);
+
+	while ((frame = frame->prev_execute_data)) {
+		zval trace;
+		
+		if (!frame->func || frame->func == OLG(instrument)) {			
+			continue;
+		}
+
+		if (ZEND_USER_CODE(frame->func->type) && frame->func->common.function_name) {
+			zval file;
+			zval line;
+
+			array_init(&trace);
+
+			ZVAL_STR(&file,  zend_string_init(
+				ZSTR_VAL(frame->func->common.function_name), 
+				ZSTR_LEN(frame->func->common.function_name), 0));
+			ZVAL_LONG(&line, frame->opline->lineno);
+
+			zend_hash_str_add(Z_ARRVAL(trace), ZEND_STRL("file"), &file);
+			zend_hash_str_add(Z_ARRVAL(trace), ZEND_STRL("line"), &line);
+
+			zend_hash_next_index_insert(Z_ARRVAL_P(return_value), &trace);
+		}
+	}
+}
+
 zend_function_entry php_overload_functions[] = {
     PHP_FE(php_overload_prototype, NULL)
     PHP_FE(php_overload_instrument, NULL)
+    PHP_FE(php_overload_backtrace, NULL)
     PHP_FE_END
 };
 
