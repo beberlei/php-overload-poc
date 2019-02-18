@@ -2,15 +2,15 @@
 OVerload functions
 --FILE--
 <?php
-include "foo.php";
+include "foo.inc";
 
 var_dump(foo(1, 2));
 
-include "bar.php";
+include "bar.inc";
 
 var_dump(bar(3, 4));
 
-include "qux.php";
+include "qux.inc";
 
 var_dump(qux(5,6));
 
@@ -21,7 +21,7 @@ var_dump($reflectionFunction->getNumberOfParameters());
 var_dump($reflectionFunction->getNumberOfRequiredParameters());
 var_dump($params = $reflectionFunction->getParameters());
 
-$reflectionFunction = new ReflectionFunction('qux_original');
+$reflectionFunction = $reflectionFunction->getOverload();
 $original = $reflectionFunction->getParameters();
 
 for ($i = 0; $i < count($params); $i++) {
@@ -31,10 +31,6 @@ for ($i = 0; $i < count($params); $i++) {
 
     if ($params[$i]->canBePassedByValue() !== $original[$i]->canBePassedByValue()) {
         echo $params[$i]->getName() . " canBePassedByValue missmatch.\n";
-    }
-
-    if ($params[$i]->getDefaultValue() !== $original[$i]->getDefaultValue()) {
-        echo $params[$i]->getName() . " getDefaultValue() missmatch.\n";
     }
 
     if ($params[$i]->isOptional() !== $original[$i]->isOptional()) {
